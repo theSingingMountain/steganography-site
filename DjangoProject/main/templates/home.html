@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Home Page</h1>
+    {%if user.is_authenticated %}
+    <h2>Welcome, <i>{{ request.user.username }}</i>.</h2>
+    <h3>This is a website written with Django and HTML for demonstration of image steganography.</h3>
+    <h3>Upload an image below. The file has to be an uncompressed file type. (PNG/TIF/TIFF/BMP)</h3>
+    <div class="row mx-auto col-md-6 align-items-center">
+        <div class="col-">
+
+            {% csrf_token %}
+
+            {% if form.errors %}
+            {% for field in form %}
+            <div class="alert alert-warning">
+                {{field.errors|striptags}}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <form id="upload_form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}    
+                <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
+    
+                <p>
+                    {{ form.file }}
+                </p>
+
+                <p>{{ form.message.label_tag}}</p>
+                <p>
+                    {{ form.message }}
+                </p>
+    
+                <div class="container text-center">
+                    <button class="btn btn-dark" value = "Upload">Upload</button>
+                </div>
+            </form>
+                {% else %}
+            <h2>Login to the Website to continue.</h2>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

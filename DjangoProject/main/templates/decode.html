@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Stego Images Gallery</h1>
+    {% if images %}
+    <h2>Below are the images that you have embedded a message onto. To uncover the message, press the Decode button below your image.</h2>
+    {% else %}
+    <h2>Try adding some images in the home page and try again.</h2>
+    {% endif %}
+    <div style="width:100%">
+        {% if messages %}
+        <div class="alert alert-success">
+            Embedded Message: {{ messages }}
+        </div>
+        {% endif %}
+
+        {% if images %}
+        {% for img in images %}
+        <form method = "post" enctype = "multipart/form-data">
+            {% csrf_token %}
+            <div class="container">
+                <div class = "row">
+                    {% if img.stegoFile %}
+                    {% if img.stegoFile.url %}
+                    <div class="col-md-6">
+                        <img src="{{img.imageFile.url|cut:'remove/trailing/dirs/'}}" style="width:100%;height:auto" alt="" name = "image2">
+                    </div>
+                    <div class="col-md-6">
+                        <center>
+                            <img src="{{img.stegoFile.url|cut:'remove/trailing/dirs/'}}" style="width:100%;height:auto" alt="" name = "image">
+                        </center>
+                    </div>
+                    <div class="container text-center">
+                        <p>Stego Image Location: {{img.stegoFile.url}}</p>
+                        <input type = "hidden" value = "{{ img.stegoFile.name }}" name = "imageName">
+                        <button type = "submit" class="btn btn-dark" value = "Decode Data" name = "{{ img.id }}">Decode</button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+        {% endfor%}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
